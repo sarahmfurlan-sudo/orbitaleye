@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OrbitalEye AI | Monitoramento Ambiental por Satélite</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#050B16;
+      --bg2:#07172A;
+      --card:rgba(255,255,255,.075);
+      --card2:rgba(255,255,255,.11);
+      --line:rgba(255,255,255,.14);
+      --text:#F4F8FF;
+      --muted:#A9B8CE;
+      --cyan:#4DE3FF;
+      --green:#45F6A4;
+      --blue:#6A8DFF;
+      --yellow:#FFD166;
+      --red:#FF5C7A;
+      --shadow:0 24px 90px rgba(0,0,0,.42);
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
+    body:before{content:"";position:fixed;inset:0;z-index:-3;background:radial-gradient(circle at 16% 12%,rgba(77,227,255,.22),transparent 32%),radial-gradient(circle at 86% 8%,rgba(106,141,255,.26),transparent 30%),radial-gradient(circle at 70% 84%,rgba(69,246,164,.12),transparent 28%),linear-gradient(135deg,#050B16 0%,#07172A 48%,#030712 100%)}
+    body:after{content:"";position:fixed;inset:0;z-index:-2;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:56px 56px;mask-image:linear-gradient(to bottom,rgba(0,0,0,.9),transparent 85%)}
+    .orbit{position:fixed;width:780px;height:780px;border:1px solid rgba(77,227,255,.13);border-radius:50%;right:-260px;top:80px;z-index:-1;animation:spin 42s linear infinite}.orbit:before{content:"";position:absolute;width:14px;height:14px;background:var(--cyan);border-radius:50%;top:100px;left:140px;box-shadow:0 0 28px var(--cyan)}@keyframes spin{to{transform:rotate(360deg)}}
+    nav{position:sticky;top:0;z-index:20;backdrop-filter:blur(20px);background:rgba(5,11,22,.72);border-bottom:1px solid var(--line)}
+    .nav-inner{max-width:1180px;margin:auto;display:flex;align-items:center;justify-content:space-between;padding:18px 22px}.brand{display:flex;gap:12px;align-items:center;font-weight:900;letter-spacing:.2px}.logo{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--cyan),var(--green));display:grid;place-items:center;color:#04101E;font-weight:900;box-shadow:0 0 32px rgba(77,227,255,.35)}.links{display:flex;gap:20px}.links a{color:var(--muted);text-decoration:none;font-size:14px;font-weight:700}.links a:hover{color:var(--cyan)}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:14px 20px;border-radius:999px;text-decoration:none;font-weight:900;color:#03111F;background:linear-gradient(135deg,var(--cyan),var(--green));box-shadow:0 16px 40px rgba(77,227,255,.22);border:0}.btn.secondary{background:transparent;color:var(--text);border:1px solid var(--line);box-shadow:none}.btn:hover{transform:translateY(-2px)}
+    section{max-width:1180px;margin:auto;padding:86px 22px}.hero{display:grid;grid-template-columns:1.05fr .95fr;gap:50px;align-items:center;min-height:calc(100vh - 74px);padding-top:58px}.tag{display:inline-flex;gap:8px;align-items:center;padding:9px 13px;border:1px solid rgba(77,227,255,.26);border-radius:999px;background:rgba(77,227,255,.08);color:var(--cyan);font-size:13px;font-weight:900;margin-bottom:22px}.hero h1{font-size:clamp(42px,6vw,78px);line-height:.96;letter-spacing:-3px;margin-bottom:22px}.grad{background:linear-gradient(135deg,var(--cyan),var(--green),var(--yellow));-webkit-background-clip:text;background-clip:text;color:transparent}.hero p{font-size:18px;line-height:1.75;color:var(--muted);max-width:650px;margin-bottom:30px}.actions{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:28px}.trust{display:flex;flex-wrap:wrap;gap:12px}.pill{padding:10px 13px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.055);color:#D9E7F8;font-size:13px;font-weight:800}
+    .sat-card{position:relative;min-height:560px;border-radius:34px;border:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.1),rgba(255,255,255,.045));box-shadow:var(--shadow);overflow:hidden;padding:28px}.earth{position:absolute;width:520px;height:520px;border-radius:50%;bottom:-200px;left:50%;transform:translateX(-50%);background:radial-gradient(circle at 35% 25%,#45F6A4 0 6%,transparent 7%),radial-gradient(circle at 60% 45%,#43B4FF 0 12%,transparent 13%),radial-gradient(circle at 50% 45%,#102E55 0,#071B34 58%,#020711 72%);box-shadow:inset -40px -70px 100px rgba(0,0,0,.62),0 0 120px rgba(77,227,255,.22)}.satellite{position:absolute;top:88px;right:92px;width:170px;height:88px;transform:rotate(-15deg);filter:drop-shadow(0 0 24px rgba(77,227,255,.35))}.body-sat{position:absolute;left:64px;top:26px;width:44px;height:36px;border-radius:8px;background:linear-gradient(135deg,#DDEBFF,#6A8DFF)}.panel{position:absolute;top:12px;width:58px;height:64px;border-radius:8px;background:linear-gradient(135deg,#0E356B,#4DE3FF);border:1px solid rgba(255,255,255,.25)}.panel.left{left:0}.panel.right{right:0}.beam{position:absolute;top:128px;right:112px;width:230px;height:330px;background:linear-gradient(to bottom,rgba(77,227,255,.28),transparent);clip-path:polygon(48% 0,100% 100%,0 100%);filter:blur(.2px)}.hud{position:absolute;left:26px;right:26px;top:28px;display:grid;gap:14px}.hud-card{background:rgba(3,10,20,.62);border:1px solid var(--line);border-radius:18px;padding:16px;backdrop-filter:blur(10px)}.hud-title{display:flex;justify-content:space-between;color:var(--muted);font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px}.bar{height:8px;border-radius:999px;background:rgba(255,255,255,.1);overflow:hidden}.bar span{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--cyan),var(--green))}.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px}.metric{background:rgba(255,255,255,.07);border:1px solid var(--line);border-radius:18px;padding:16px}.metric b{display:block;font-size:24px;color:#fff}.metric small{color:var(--muted);font-weight:800}.alert{border-left:4px solid var(--red)}
+    .section-title{max-width:760px;margin-bottom:36px}.kicker{color:var(--cyan);font-weight:900;text-transform:uppercase;letter-spacing:1.4px;font-size:13px;margin-bottom:12px}.section-title h2{font-size:clamp(32px,4vw,52px);line-height:1.04;letter-spacing:-1.8px;margin-bottom:16px}.section-title p{color:var(--muted);line-height:1.75;font-size:17px}.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.card{border:1px solid var(--line);border-radius:28px;background:var(--card);padding:26px;box-shadow:0 20px 70px rgba(0,0,0,.18)}.card:hover{background:var(--card2);transform:translateY(-4px)}.icon{width:48px;height:48px;border-radius:16px;background:rgba(77,227,255,.12);display:grid;place-items:center;font-size:24px;margin-bottom:18px}.card h3{font-size:22px;margin-bottom:10px}.card p,.card li{color:var(--muted);line-height:1.65}.card ul{padding-left:18px;margin-top:12px}.pipeline{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}.step{position:relative;border:1px solid rgba(77,227,255,.2);background:rgba(77,227,255,.07);border-radius:22px;padding:18px;min-height:130px}.step:after{content:"→";position:absolute;right:-14px;top:45%;color:var(--cyan);font-weight:900}.step:last-child:after{display:none}.step b{display:block;margin-bottom:8px}.step span{color:var(--muted);font-size:13px;line-height:1.5}.demo{display:grid;grid-template-columns:.9fr 1.1fr;gap:18px}.dash{position:relative;border-radius:34px;background:linear-gradient(180deg,#081322,#050B16);border:1px solid rgba(174,198,230,.18);padding:24px;box-shadow:var(--shadow);overflow:hidden}.dash:before{content:"";position:absolute;inset:-1px;background:radial-gradient(circle at 16% 0%,rgba(77,227,255,.15),transparent 36%),radial-gradient(circle at 62% 108%,rgba(69,246,164,.11),transparent 38%);pointer-events:none}.dash>*{position:relative}.dash-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}.dash-head strong{font-size:20px;letter-spacing:-.4px}.dots{display:flex;gap:9px}.dots i{width:13px;height:13px;border-radius:50%;background:rgba(174,198,230,.18)}.map{height:386px;border-radius:28px;background:radial-gradient(circle at 25% 30%,rgba(69,246,164,.42),transparent 17%),radial-gradient(circle at 58% 50%,rgba(255,209,102,.37),transparent 14%),radial-gradient(circle at 76% 34%,rgba(255,92,122,.42),transparent 14%),linear-gradient(135deg,#123B61 0%,#0B2A46 42%,#06101E 100%);position:relative;overflow:hidden;border:1px solid rgba(77,227,255,.08)}.map:before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.055) 1px,transparent 1px);background-size:43px 43px}.map:after{content:"";position:absolute;left:26px;right:26px;bottom:0;height:1px;background:linear-gradient(90deg,transparent,rgba(77,227,255,.18),transparent)}.risk{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px}.risk div{display:flex;align-items:flex-end;justify-content:space-between;gap:8px;min-height:70px;padding:18px;border:1px solid rgba(174,198,230,.20);border-radius:20px;background:rgba(255,255,255,.075)}.risk small{color:#D7E1EF;font-size:15px;font-weight:800}.risk b{font-size:30px;line-height:1;font-weight:900;letter-spacing:-1px}.green{color:var(--green)}.yellow{color:var(--yellow)}.red{color:var(--red)}
+    .pricing{display:grid;grid-template-columns:1fr 1fr;gap:18px}.price-card{padding:34px;border-radius:32px;border:1px solid rgba(77,227,255,.28);background:linear-gradient(180deg,rgba(77,227,255,.12),rgba(255,255,255,.055));box-shadow:var(--shadow)}.price{font-size:46px;font-weight:900;margin:12px 0}.cta{border-radius:36px;text-align:center;background:linear-gradient(135deg,rgba(77,227,255,.18),rgba(69,246,164,.13));border:1px solid rgba(77,227,255,.28);padding:56px 28px}.cta h2{font-size:clamp(34px,4vw,56px);letter-spacing:-2px;margin-bottom:16px}.cta p{color:var(--muted);font-size:18px;line-height:1.7;max-width:760px;margin:0 auto 26px}footer{border-top:1px solid var(--line);padding:28px 22px;color:var(--muted);text-align:center;font-size:13px}
+    @media(max-width:950px){.hero,.demo,.pricing{grid-template-columns:1fr}.grid-3{grid-template-columns:1fr}.pipeline{grid-template-columns:1fr 1fr}.step:after{display:none}.links{display:none}.sat-card{min-height:480px}}
+    @media(max-width:560px){section{padding:58px 18px}.pipeline,.risk,.metrics{grid-template-columns:1fr}.hero h1{letter-spacing:-1.5px}.satellite{right:40px}.nav-inner{padding:14px 18px}}
+  </style>
+</head>
+<body>
+  <div class="orbit"></div>
+  <nav>
+    <div class="nav-inner">
+      <div class="brand"><div class="logo">OE</div> OrbitalEye AI</div>
+      <div class="links">
+        <a href="#solucao">Solução</a><a href="#modulos">Módulos</a><a href="#demo">Demo</a><a href="#entrega">Entrega</a>
+      </div>
+      <a class="btn secondary" href="#cta">Pitch final</a>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div>
+      <div class="tag">🛰️ Global Solution 2026.1 · Space Connect</div>
+      <h1>Inteligência artificial orbital para <span class="grad">proteger o planeta em tempo real.</span></h1>
+      <p>O OrbitalEye AI transforma imagens de satélite e dados ambientais em alertas inteligentes de desmatamento, queimadas e risco climático. Uma plataforma pensada para a nova economia espacial, conectando CNN, Machine Learning e dashboard de decisão.</p>
+      <div class="actions">
+        <a href="#demo" class="btn">Ver demonstração</a>
+        <a href="#solucao" class="btn secondary">Conhecer produto</a>
+      </div>
+      <div class="trust">
+        <span class="pill">CNN + Transfer Learning</span>
+        <span class="pill">EuroSAT / Sentinel-2</span>
+        <span class="pill">Alertas ambientais</span>
+        <span class="pill">Dashboard executivo</span>
+      </div>
+    </div>
+    <div class="sat-card" aria-label="Demonstração visual do satélite OrbitalEye AI">
+      <div class="hud">
+        <div class="hud-card alert"><div class="hud-title"><span>Alerta Orbital</span><span class="red">Risco alto</span></div><b>Expansão de área degradada detectada</b><div class="bar" style="margin-top:12px"><span style="width:86%"></span></div></div>
+        <div class="metrics">
+          <div class="metric"><b>10</b><small>classes de uso do solo</small></div>
+          <div class="metric"><b>27k</b><small>imagens no dataset</small></div>
+          <div class="metric"><b>83,48%</b><small>acurácia validação</small></div>
+        </div>
+      </div>
+      <div class="satellite"><div class="panel left"></div><div class="body-sat"></div><div class="panel right"></div></div>
+      <div class="beam"></div><div class="earth"></div>
+    </div>
+  </section>
+
+  <section id="solucao">
+    <div class="section-title"><div class="kicker">O problema</div><h2>O volume de imagens de satélite cresce mais rápido do que a análise humana consegue acompanhar.</h2><p>Satélites capturam continuamente a superfície terrestre. O OrbitalEye AI automatiza a interpretação dessas imagens para apoiar prevenção de desastres, sustentabilidade, agricultura inteligente e planejamento urbano.</p></div>
+    <div class="grid-3">
+      <div class="card"><div class="icon">🌳</div><h3>Ambiental</h3><p>Detecta sinais de desmatamento, queimadas, degradação florestal e alteração de recursos hídricos.</p></div>
+      <div class="card"><div class="icon">🌦️</div><h3>Climático</h3><p>Combina dados históricos e modelos supervisionados para apoiar previsão de eventos extremos.</p></div>
+      <div class="card"><div class="icon">🏙️</div><h3>Social e econômico</h3><p>Ajuda governos, empresas e centros de pesquisa a tomar decisões com base em dados orbitais.</p></div>
+    </div>
+  </section>
+
+  <section id="modulos">
+    <div class="section-title"><div class="kicker">Produto</div><h2>Uma plataforma, três módulos integrados.</h2><p>A solução foi desenhada como um pipeline unificado: do satélite ao alerta final em dashboard.</p></div>
+    <div class="grid-3">
+      <div class="card"><div class="icon">🛰️</div><h3>DeforestWatch</h3><p>CNN com Transfer Learning para classificar imagens de satélite e identificar padrões de floresta, áreas urbanas, rios, agricultura, rodovias e regiões industriais.</p><ul><li>MobileNetV2</li><li>Normalização de pixels</li><li>Data Augmentation</li><li>EarlyStopping e Dropout</li></ul></div>
+      <div class="card"><div class="icon">📈</div><h3>ClimaCast</h3><p>Modelos de Machine Learning para previsão e classificação de risco climático com dados estruturados ambientais.</p><ul><li>Random Forest / XGBoost</li><li>Regressão e classificação</li><li>Métricas de validação</li><li>Análise de risco por região</li></ul></div>
+      <div class="card"><div class="icon">⚠️</div><h3>EnviroSense</h3><p>Camada integradora que cruza o resultado da CNN com dados climáticos e gera o Índice OrbitalEye.</p><ul><li>Ranking de risco</li><li>Alertas automáticos</li><li>Dashboard executivo</li><li>Relatório final HTML/PDF</li></ul></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-title"><div class="kicker">Arquitetura</div><h2>Como o OrbitalEye AI funciona.</h2></div>
+    <div class="pipeline">
+      <div class="step"><b>1. Satélite</b><span>Coleta de imagens e dados ambientais.</span></div>
+      <div class="step"><b>2. Ingestão</b><span>Entrada em Data Lake ou pipeline Python.</span></div>
+      <div class="step"><b>3. Pré-processamento</b><span>Resize, normalização e limpeza dos dados.</span></div>
+      <div class="step"><b>4. IA</b><span>CNN para imagem + ML para clima.</span></div>
+      <div class="step"><b>5. Índice</b><span>Cálculo do risco ambiental integrado.</span></div>
+      <div class="step"><b>6. Dashboard</b><span>Alertas, mapas, ranking e relatório.</span></div>
+    </div>
+  </section>
+
+  <section id="demo">
+    <div class="section-title"><div class="kicker">Demonstração</div><h2>Preview da plataforma para a entrega final.</h2><p>Use esta landing page como material complementar para vender a ideia: ela mostra o valor do produto, a tecnologia usada e uma visão executiva do dashboard.</p></div>
+    <div class="demo">
+      <div class="card"><h3>Resumo do modelo</h3><p>O protótipo utiliza o dataset EuroSAT, com imagens Sentinel-2 em 10 classes de uso do solo. A arquitetura proposta usa MobileNetV2 com base pré-treinada, camadas de classificação, BatchNormalization, Dropout e EarlyStopping.</p><ul><li>Treino: 21.600 imagens</li><li>Validação: 5.400 imagens</li><li>Classes: 10 categorias</li><li>Melhor acurácia de validação: 83,48%</li></ul></div>
+      <div class="dash">
+        <div class="dash-head"><strong>OrbitalEye Command Center</strong><div class="dots"><i></i><i></i><i></i></div></div>
+        <div class="map"></div>
+        <div class="risk"><div><small>Risco baixo</small><b class="green">24%</b></div><div><small>Risco médio</small><b class="yellow">38%</b></div><div><small>Risco alto</small><b class="red">38%</b></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="entrega">
+    <div class="section-title"><div class="kicker">Valor da proposta</div><h2>Por que o OrbitalEye AI é vendável?</h2></div>
+    <div class="pricing">
+      <div class="price-card"><h3>Para a Global Solution</h3><div class="price">Entrega completa</div><p>Notebook técnico, explicação do problema, arquitetura, avaliação do modelo, conexão com contexto espacial, impacto social e apresentação clara do produto.</p></div>
+      <div class="price-card"><h3>Para o mercado</h3><div class="price">Produto escalável</div><p>Pode evoluir para APIs de alertas ambientais, dashboard SaaS, monitoramento por região e integração com bases públicas como NASA, INPE, ESA, NOAA e dados climáticos.</p></div>
+    </div>
+  </section>
+
+  <section id="cta">
+    <div class="cta"><h2>OrbitalEye AI: ver antes, agir antes.</h2><p>Uma solução cognitiva para transformar dados espaciais em decisões ambientais rápidas, inteligentes e sustentáveis.</p><a class="btn" href="#">Produto pronto para apresentação</a></div>
+  </section>
+
+  <footer>OrbitalEye AI · Global Solution 2026.1 · Inteligência Artificial FIAP · Landing page de apresentação do produto</footer>
+</body>
+</html>
